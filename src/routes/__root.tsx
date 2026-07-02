@@ -78,14 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "EcoWaste — Smart Waste Management System" },
+      { title: "Mr dk— Smart Waste Management System" },
       {
         name: "description",
         content:
           "Report waste problems and manage collection efficiently. A smart, eco-friendly waste management platform for cleaner communities.",
       },
       { name: "author", content: "EcoWaste" },
-      { property: "og:title", content: "EcoWaste — Smart Waste Management System" },
+      { property: "og:title", content: "Mr dk— Smart Waste Management System" },
       {
         property: "og:description",
         content: "Keeping our environment clean through smart waste management.",
@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Mr dk— Smart Waste Management System" },
+      { name: "description", content: "EcoGuard Connect is a responsive web application for reporting and managing waste issues." },
+      { property: "og:description", content: "EcoGuard Connect is a responsive web application for reporting and managing waste issues." },
+      { name: "twitter:description", content: "EcoGuard Connect is a responsive web application for reporting and managing waste issues." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d579d90b-d743-46a4-8ac3-af5ee05d1c4b/id-preview-ab010078--08b99a12-a102-49a4-93c7-2b80bff9ca87.lovable.app-1783008761405.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d579d90b-d743-46a4-8ac3-af5ee05d1c4b/id-preview-ab010078--08b99a12-a102-49a4-93c7-2b80bff9ca87.lovable.app-1783008761405.png" },
     ],
     links: [
       {
