@@ -117,12 +117,16 @@ function ReportsPage() {
                     <Button size="icon" variant="ghost" onClick={() => setViewing(r)} aria-label="View">
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={() => openEdit(r)} aria-label="Edit">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={() => remove(r.id)} aria-label="Delete" className="text-destructive hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {isAdmin && (
+                      <>
+                        <Button size="icon" variant="ghost" onClick={() => openEdit(r)} aria-label="Edit">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => remove(r.id)} aria-label="Delete" className="text-destructive hover:text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
