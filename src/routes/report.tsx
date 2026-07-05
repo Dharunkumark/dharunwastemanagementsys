@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Upload, Send } from "lucide-react";
+import { Upload, Send, CheckCircle2, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ function ReportPage() {
   const navigate = useNavigate();
   const [reportId, setReportId] = useState("RPT-...");
   const [image, setImage] = useState<string>();
+  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     userName: "",
     wasteType: "" as WasteType | "",
@@ -65,8 +66,48 @@ function ReportPage() {
       status: "Pending",
     });
     toast.success(`Report ${reportId} submitted!`);
-    navigate({ to: "/reports" });
+    setSubmitted(true);
   };
+
+  if (submitted) {
+    return (
+      <DashboardShell title="Report Submitted" subtitle="Your waste report has been received">
+        <div className="mx-auto grid max-w-xl place-items-center gap-5 rounded-2xl border border-border bg-card p-10 text-center shadow-card">
+          <span className="grid h-16 w-16 place-items-center rounded-full bg-primary/15 text-primary">
+            <CheckCircle2 className="h-9 w-9" />
+          </span>
+          <h2 className="text-2xl font-bold text-foreground">Thank you for your report!</h2>
+          <p className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="h-4 w-4 text-primary" />
+            We will take a response within 24 hours.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Your report ID is <span className="font-semibold text-foreground">{reportId}</span>.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSubmitted(false);
+                setImage(undefined);
+                setReportId(nextReportId());
+                setForm({
+                  userName: currentUser() ?? "",
+                  wasteType: "",
+                  location: "",
+                  description: "",
+                  date: new Date().toISOString().slice(0, 10),
+                });
+              }}
+            >
+              Report Another
+            </Button>
+            <Button onClick={() => navigate({ to: "/dashboard" })}>Back to Dashboard</Button>
+          </div>
+        </div>
+      </DashboardShell>
+    );
+  }
 
   return (
     <DashboardShell title="Report Waste" subtitle="Submit a new waste report">
