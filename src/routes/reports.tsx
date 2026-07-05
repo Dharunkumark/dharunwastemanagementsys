@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Pencil, Trash2, Inbox, Eye, ImageOff } from "lucide-react";
+import { Pencil, Trash2, Inbox, Eye, ImageOff, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ import {
   type ReportStatus,
   type WasteReport,
 } from "@/lib/store";
+import { currentUser } from "@/lib/store";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({ meta: [{ title: "View Reports — EcoWaste" }] }),
@@ -55,9 +56,29 @@ function ReportsPage() {
   const [editing, setEditing] = useState<WasteReport | null>(null);
   const [editStatus, setEditStatus] = useState<ReportStatus>("Pending");
   const [viewing, setViewing] = useState<WasteReport | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const refresh = () => setReports(getReports());
-  useEffect(refresh, []);
+  useEffect(() => {
+    setIsAdmin(currentUser() === "admin");
+    refresh();
+  }, []);
+
+  if (isAdmin === false) {
+    return (
+      <DashboardShell title="View Reports" subtitle="Administrator access only">
+        <div className="mx-auto grid max-w-lg place-items-center gap-4 rounded-2xl border border-border bg-card p-10 text-center shadow-card">
+          <span className="grid h-16 w-16 place-items-center rounded-full bg-destructive/15 text-destructive">
+            <ShieldAlert className="h-9 w-9" />
+          </span>
+          <h2 className="text-2xl font-bold text-foreground">Admin access required</h2>
+          <p className="text-muted-foreground">
+            Only administrators can view and manage submitted reports. Please sign in with an admin account.
+          </p>
+        </div>
+      </DashboardShell>
+    );
+  }
 
   const openEdit = (r: WasteReport) => {
     setEditing(r);
