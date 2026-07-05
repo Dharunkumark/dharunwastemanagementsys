@@ -217,6 +217,12 @@ function ReportsPage() {
                 </p>
               </div>
               <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Admin Response</p>
+                <p className="rounded-xl bg-primary/10 p-3 text-sm text-foreground">
+                  {viewing.response || "No response added yet."}
+                </p>
+              </div>
+              <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Uploaded Image</p>
                 {viewing.image ? (
                   <img
