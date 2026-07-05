@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Pencil, Trash2, Inbox } from "lucide-react";
+import { Pencil, Trash2, Inbox, Eye, ImageOff } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
@@ -54,6 +54,7 @@ function ReportsPage() {
   const [reports, setReports] = useState<WasteReport[]>([]);
   const [editing, setEditing] = useState<WasteReport | null>(null);
   const [editStatus, setEditStatus] = useState<ReportStatus>("Pending");
+  const [viewing, setViewing] = useState<WasteReport | null>(null);
 
   const refresh = () => setReports(getReports());
   useEffect(refresh, []);
@@ -105,6 +106,9 @@ function ReportsPage() {
                 <TableCell>{r.date}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
+                    <Button size="icon" variant="ghost" onClick={() => setViewing(r)} aria-label="View">
+                      <Eye className="h-4 w-4" />
+                    </Button>
                     <Button size="icon" variant="ghost" onClick={() => openEdit(r)} aria-label="Edit">
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -143,6 +147,59 @@ function ReportsPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
             <Button onClick={saveEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Report {viewing?.id}</DialogTitle>
+          </DialogHeader>
+          {viewing && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Reported By</p>
+                  <p className="font-medium text-foreground">{viewing.userName}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Waste Type</p>
+                  <p className="font-medium text-foreground">{viewing.wasteType}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Location</p>
+                  <p className="font-medium text-foreground">{viewing.location}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Date</p>
+                  <p className="font-medium text-foreground">{viewing.date}</p>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Problem Described</p>
+                <p className="rounded-xl bg-secondary/40 p-3 text-sm text-foreground">
+                  {viewing.description || "No description provided."}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Uploaded Image</p>
+                {viewing.image ? (
+                  <img
+                    src={viewing.image}
+                    alt={`Waste report ${viewing.id}`}
+                    className="max-h-72 w-full rounded-xl object-contain bg-muted"
+                  />
+                ) : (
+                  <div className="flex items-center gap-2 rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+                    <ImageOff className="h-5 w-5" /> No image uploaded.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewing(null)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
