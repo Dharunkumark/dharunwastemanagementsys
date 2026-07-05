@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   deleteReport,
   getReports,
@@ -55,6 +56,7 @@ function ReportsPage() {
   const [reports, setReports] = useState<WasteReport[]>([]);
   const [editing, setEditing] = useState<WasteReport | null>(null);
   const [editStatus, setEditStatus] = useState<ReportStatus>("Pending");
+  const [editResponse, setEditResponse] = useState("");
   const [viewing, setViewing] = useState<WasteReport | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
@@ -83,11 +85,12 @@ function ReportsPage() {
   const openEdit = (r: WasteReport) => {
     setEditing(r);
     setEditStatus(r.status);
+    setEditResponse(r.response ?? "");
   };
 
   const saveEdit = () => {
     if (!editing) return;
-    updateReport(editing.id, { status: editStatus });
+    updateReport(editing.id, { status: editStatus, response: editResponse.trim() });
     toast.success("Report updated");
     setEditing(null);
     refresh();
@@ -165,6 +168,16 @@ function ReportsPage() {
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="response">Response note for citizen</Label>
+            <Textarea
+              id="response"
+              rows={3}
+              value={editResponse}
+              onChange={(e) => setEditResponse(e.target.value)}
+              placeholder="e.g. Our team has been dispatched and will clear the site by tomorrow."
+            />
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
             <Button onClick={saveEdit}>Save Changes</Button>
@@ -201,6 +214,12 @@ function ReportsPage() {
                 <p className="text-sm text-muted-foreground">Problem Described</p>
                 <p className="rounded-xl bg-secondary/40 p-3 text-sm text-foreground">
                   {viewing.description || "No description provided."}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Admin Response</p>
+                <p className="rounded-xl bg-primary/10 p-3 text-sm text-foreground">
+                  {viewing.response || "No response added yet."}
                 </p>
               </div>
               <div className="space-y-1">

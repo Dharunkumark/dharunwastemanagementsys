@@ -11,6 +11,7 @@ export interface WasteReport {
   image?: string;
   date: string;
   status: ReportStatus;
+  response?: string;
 }
 
 export interface AppUser {
