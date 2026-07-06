@@ -57,7 +57,6 @@ function ReportsPage() {
   const [editing, setEditing] = useState<WasteReport | null>(null);
   const [editStatus, setEditStatus] = useState<ReportStatus>("Pending");
   const [editResponse, setEditResponse] = useState("");
-  const [viewing, setViewing] = useState<WasteReport | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const refresh = () => setReports(getReports());
