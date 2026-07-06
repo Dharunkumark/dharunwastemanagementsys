@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Pencil, Trash2, Inbox, Eye, ImageOff } from "lucide-react";
+import { Pencil, Trash2, Inbox, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
@@ -114,8 +114,10 @@ function ReportsPage() {
                 <TableCell>{r.date}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button size="icon" variant="ghost" onClick={() => setViewing(r)} aria-label="View">
-                      <Eye className="h-4 w-4" />
+                    <Button asChild size="icon" variant="ghost" aria-label="View">
+                      <Link to="/reports/$id" params={{ id: r.id }}>
+                        <Eye className="h-4 w-4" />
+                      </Link>
                     </Button>
                     {isAdmin && (
                       <>
