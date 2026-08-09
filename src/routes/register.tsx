@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { addUser, getUsers } from "@/lib/store";
+import { addUser, getUsers, isReservedUsername } from "@/lib/store";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — EcoWaste" }] }),
@@ -36,6 +36,10 @@ function RegisterPage() {
     }
     if (getUsers().some((u) => u.username === form.username)) {
       toast.error("Username already taken");
+      return;
+    }
+    if (isReservedUsername(form.username)) {
+      toast.error("This username is reserved for the administrator");
       return;
     }
     addUser({
