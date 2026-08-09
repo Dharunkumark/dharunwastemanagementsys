@@ -89,11 +89,22 @@ export function nextReportId(): string {
   return `RPT-${max + 1}`;
 }
 
+// Reserved: only the single built-in owner account may be admin.
+export const ADMIN_USERNAME = "admin";
+const RESERVED_USERNAMES = ["admin", "administrator", "root", "superadmin", "owner"];
+
+export function isReservedUsername(username: string): boolean {
+  return RESERVED_USERNAMES.includes(username.trim().toLowerCase());
+}
+
 export function getUsers(): AppUser[] {
   return read<AppUser[]>(USERS_KEY, []);
 }
 
 export function addUser(user: AppUser) {
+  if (isReservedUsername(user.username)) {
+    throw new Error("This username is reserved");
+  }
   const users = getUsers();
   users.push(user);
   write(USERS_KEY, users);
@@ -105,11 +116,18 @@ export function userCount(): number {
 }
 
 export function login(username: string, password: string): boolean {
-  const users = getUsers();
-  const found = users.find((u) => u.username === username && u.password === password);
-  // Allow demo login without registration.
-  if (found || (username === "admin" && password === "admin")) {
-    write(SESSION_KEY, { username });
+  const name = username.trim();
+  // The admin account is built in and can never be created through registration.
+  if (isReservedUsername(name)) {
+    if (name.toLowerCase() === ADMIN_USERNAME && password === "admin") {
+      write(SESSION_KEY, { username: ADMIN_USERNAME });
+      return true;
+    }
+    return false;
+  }
+  const found = getUsers().find((u) => u.username === name && u.password === password);
+  if (found) {
+    write(SESSION_KEY, { username: name });
     return true;
   }
   return false;
@@ -122,4 +140,8 @@ export function logout() {
 export function currentUser(): string | null {
   const s = read<{ username: string } | null>(SESSION_KEY, null);
   return s?.username ?? null;
+}
+
+export function isAdmin(): boolean {
+  return currentUser() === ADMIN_USERNAME;
 }
